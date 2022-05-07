@@ -5,9 +5,6 @@ const digitsBtns = document.getElementsByClassName("digits");
 for (let i = 0; i < digitsBtns.length; i++) {
   digitsBtns[i].addEventListener("click", () => {
     answerField.value += digitsBtns[i].value;
-    if (ans !== "") {
-      answerField.value = digitsBtns[i].value;
-    }
   });
 }
 
@@ -28,7 +25,7 @@ eqBtn.addEventListener("click", () => {
   if (/[=]/g.test(str) || str === "") {
     answerField.value = "";
   } else {
-    ans = `${Function(`return ${answerField.value};`)()}`;
+    ans = Function(`return ${answerField.value};`)();
     answerField.value = ans;
   }
 });
