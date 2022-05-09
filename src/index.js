@@ -28,12 +28,23 @@ const basicCompute = (expression) => {
 };
 
 const validateMathExpression = (expression) => {
-  if (/[\*\/\+\-]$/.test(expression) || /[\*\/\+\-]{2,}/.test(expression)) {
+  if (/[\*\/\+\-\.]$/.test(expression) || /[\*\/\+\-\.]{2,}/.test(expression)) {
     input.classList.add("invalid");
     input.innerHTML += `<i class="fa-solid fa-triangle-exclamation"></i>`;
+    eqBtn.disabled = true;
+    if (eqBtn.clicked === true) {
+      playSound();
+    }
   } else {
     input.classList.remove("invalid");
+    eqBtn.disabled = false;
   }
+};
+
+const playSound = function () {
+  const audio = new Audio("~/assets/buzz.wav");
+  audio.loop = false;
+  audio.play();
 };
 const output = document.getElementById("output");
 const input = document.getElementById("input");
