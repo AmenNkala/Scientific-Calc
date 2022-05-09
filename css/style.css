@@ -20,21 +20,23 @@ main {
 #input,
 #output {
   text-align: right;
-  margin-right: 10px;
 }
 
 #input {
   height: 70%;
-}
-#input {
   font-size: 2.3em;
   color: #000;
   opacity: 0.6;
 }
 
+#input i {
+  font-size: 0.7em;
+  color: rgb(230, 0, 0);
+}
+
 #output {
   height: auto;
-  font-size: 3rem;
+  font-size: 5rem;
 }
 
 button {
@@ -64,7 +66,9 @@ button:active {
 
 .digits,
 .dot,
-#divideBtn {
+#divideBtn,
+.brackets,
+.clearEntry {
   height: 50px;
   width: 100px;
 }
@@ -75,9 +79,19 @@ button:active {
   color: #000;
 }
 
-.operatorBtn {
+.operatorBtn,
+.clearAll {
   height: 50px;
   width: 50px;
   color: white;
   background-color: black;
+}
+
+.brackets {
+  background-color: rgb(175, 175, 175);
+}
+
+.clearBtns {
+  background-color: rgb(255, 132, 0);
+  color: #000;
 }
