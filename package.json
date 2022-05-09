@@ -1,0 +1,22 @@
+{
+  "name": "scientific-calc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AmenNkala/Scientific-Calc.git"
+  },
+  "author": "Amen Nkala",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AmenNkala/Scientific-Calc/issues"
+  },
+  "homepage": "https://github.com/AmenNkala/Scientific-Calc#readme",
+  "dependencies": {
+    "jasmine": "^4.1.0"
+  }
+}
