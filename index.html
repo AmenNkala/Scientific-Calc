@@ -4,31 +4,43 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+
     <script src="./src/index.js" defer></script>
     <title>Sci-Calculator</title>
   </head>
   <body>
-    <div>
-      <input type="text" id="answer" readonly />
+    <main>
+      <div class="display">
+        <div id="input"></div>
+        <div id="output"></div>
+      </div>
       <div class="grid">
-        <button class="digits" value="1">1</button>
-        <button class="digits" value="2">2</button>
-        <button class="digits" value="3">3</button>
-        <button class="digits" value="4">4</button>
-        <button class="digits" value="5">5</button>
-        <button class="digits" value="6">6</button>
-        <button class="digits" value="7">7</button>
-        <button class="digits" value="8">8</button>
-        <button class="digits" value="9">9</button>
-        <button class="digits" value="0">0</button>
+        <div class="row">
+          <button class="digits" value="1">1</button>
+          <button class="digits" value="2">2</button>
+          <button class="digits" value="3">3</button>
+          <button class="operatorBtn" value="+" id="addBtn">&plus;</button>
+        </div>
+        <div class="row">
+          <button class="digits" value="4">4</button>
+          <button class="digits" value="5">5</button>
+          <button class="digits" value="6">6</button>
+          <button class="operatorBtn" value="-" id="minusBtn">&minus;</button>
+        </div>
+        <div class="row">
+          <button class="digits" value="7">7</button>
+          <button class="digits" value="8">8</button>
+          <button class="digits" value="9">9</button>
+          <button class="operatorBtn" value="*" id="timesBtn">&times;</button>
+        </div>
+        <div class="row">
+          <button class="dot">.</button>
+          <button class="digits" value="0">0</button>
+          <button class="operatorBtn" value="/" id="divideBtn">&divide;</button>
+          <button class="operatorBtn" id="eqBtn">&equals;</button>
+        </div>
       </div>
-      <div>
-        <button class="operatorBtn" value="*" id="timesBtn">&times;</button>
-        <button class="operatorBtn" value="/" id="divideBtn">&divide;</button>
-        <button class="operatorBtn" value="+" id="addBtn">&plus;</button>
-        <button class="operatorBtn" value="-" id="minusBtn">&minus;</button>
-        <button id="eqBtn">&equals;</button>
-      </div>
-    </div>
+    </main>
   </body>
 </html>
