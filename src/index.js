@@ -1,78 +1,123 @@
-//import { basicCompute } from "./basicCalc";
-let lastClicked = ``;
-const modifyArray = (array1, array2, index, operator) => {
-  let temp_ans = Function(
-    `return ${array1[index]} ${operator} ${array1[index + 1]}`
-  )();
-  array1.splice(index, 2, temp_ans);
-  array2.splice(index, 1);
+const { create, all } = require("mathjs");
+const { expressionCalc } = require("./basicCalc");
+const config = {
+  epsilon: 1e-12,
+  number: "number",
+  precision: 10,
+  predictable: false,
 };
+const math = create(all, config);
+const inputButtons = document.getElementsByClassName("inputBtns");
+const inputsDisplay = document.getElementById("inputs");
+const outputDisplay = document.getElementById("outputs");
+const operators = document.getElementsByClassName("operators");
+const functionsBtns = document.getElementsByClassName("functions");
+const ans = document.getElementById("ans");
 
-const basicCompute = (expression) => {
-  const operands = expression.match(/-?[\d{1,}\.]{1,}/g).map(Number);
-  const operators = expression
-    .replaceAll(/\s/gi, "")
-    .replaceAll(/[0-9\.]/gi, "")
-    .split("");
-  for (let i = 0; i < operators.length; i++) {
-    if (operators[i] == "*" || operators[i] == "/") {
-      modifyArray(operands, operators, i, operators[i]);
-      i = -1;
-    }
-  }
-  for (let i = 0; i < operators.length; i++) {
-    modifyArray(operands, operators, i, "+");
-    i = -1;
-  }
-  return operands[0];
-};
+let displayString = ``;
+let memory = [];
 
-const validateMathExpression = (expression) => {
-  if (/[\*\/\+\-\.]$/.test(expression) || /[\*\/\+\-\.]{2,}/.test(expression)) {
-    input.classList.add("invalid");
-    input.innerHTML += `<i class="fa-solid fa-triangle-exclamation"></i>`;
-    eqBtn.disabled = true;
-    if (eqBtn.clicked === true) {
-      playSound();
-    }
+const writeToScreen = (value) => {
+  displayString += value;
+  inputsDisplay.textContent = displayString;
+  if (!validateExpression(displayString)) {
+    inputsDisplay.classList.toggle("invalid");
   } else {
-    input.classList.remove("invalid");
-    eqBtn.disabled = false;
+    inputsDisplay.classList.remove("invalid");
   }
 };
 
-const playSound = function () {
-  const audio = new Audio("~/assets/buzz.wav");
-  audio.loop = false;
-  audio.play();
-};
-const output = document.getElementById("output");
-const input = document.getElementById("input");
-
-Array.from(document.getElementsByClassName("inputBtns")).map((button) => {
+Array.from(inputButtons).map((button) => {
   button.addEventListener("click", () => {
-    input.textContent += button.value;
-    lastClicked = button.value;
-    validateMathExpression(input.textContent);
+    writeToScreen(button.innerText);
   });
 });
 
-let ans = "";
-const eqBtn = document.getElementById("eqBtn");
-eqBtn.addEventListener("click", () => {
-  let str = input.textContent;
-  output.textContent = basicCompute(str);
+Array.from(operators).map((button) => {
+  button.addEventListener("click", () => {
+    writeToScreen(button.innerText);
+  });
+});
+
+Array.from(functionsBtns).map((button) => {
+  button.addEventListener("click", () => {
+    writeToScreen(`${button.innerText}(`);
+  });
+});
+
+document.getElementById("root").addEventListener("click", (e) => {
+  writeToScreen(e.target.innerText + "(");
+});
+
+document.getElementById("power").addEventListener("click", (e) => {
+  writeToScreen(e.target.value);
+});
+
+document.getElementById("fact").addEventListener("click", () => {
+  writeToScreen("x!(");
+});
+
+document.getElementById("equals").addEventListener("click", () => {
+  ans.value = outputDisplay.textContent = math.evaluate(replaceInvalid());
+  if (memory.length === 8) {
+    memory = [];
+    document.getElementsByClassName("history")[0].innerHTML = "";
+  } else {
+    memory.push(`${inputsDisplay.textContent} = ${ans.value}\n`);
+    let p = document.createElement("p");
+    p.innerText = memory[memory.length - 1];
+    document.getElementsByClassName("history")[0].appendChild(p);
+  }
+  animateAns();
 });
 
 document
   .getElementsByClassName("clearEntry")[0]
   .addEventListener("click", () => {
-    let str = input.textContent;
-    input.textContent = str.slice(0, -1);
-    validateMathExpression(input.textContent);
+    displayString = displayString.substring(0, displayString.length - 1);
+    inputsDisplay.textContent = displayString;
   });
 
 document.getElementsByClassName("clearAll")[0].addEventListener("click", () => {
-  input.textContent = "";
-  output.textContent = "";
+  displayString = "";
+  inputsDisplay.textContent = displayString;
+  outputDisplay.textContent = "";
 });
+
+document.getElementById("ans").addEventListener("click", () => {
+  if (outputDisplay.textContent !== "") {
+    displayString = ans.value;
+    inputsDisplay.textContent = displayString;
+    outputDisplay.textContent = "";
+  } else {
+    displayString += ans.value;
+    inputsDisplay.textContent = displayString;
+  }
+});
+
+const replaceInvalid = () => {
+  return displayString
+    .replace(/×/g, "*")
+    .replace(/÷/g, "/")
+    .replace(/\−/g, "-")
+    .replace(/\√/g, "sqrt")
+    .replace(/(cos-1)/g, "acos")
+    .replace(/(sin-1)/g, "asin")
+    .replace(/(tan-1)/g, "atan")
+    .replace(/(x\!)/g, "factorial")
+    .replace(/π/g, "pi");
+};
+
+const animateAns = () => {
+  outputDisplay.style.animation = "big 0.5s ease-in-out";
+  outputDisplay.style.animationFillMode = "forwards";
+};
+
+const validateExpression = (expression) => {
+  if (/[\/\*]{2,}/g.test(expression)) return false;
+  if (/^[\/\*]/.test(expression)) return false;
+  if (/(?<=\/)[0]/g.test(expression)) return false;
+  if (/[\/\*\-\+](?=\))/g.test(expression)) return false;
+  if (/(\/$|\*$|\-$|\+$)/.test(expression)) return false;
+  return true;
+};
