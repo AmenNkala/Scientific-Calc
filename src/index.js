@@ -1,18 +1,14 @@
-const { create, all } = require("mathjs");
 const { expressionCalc } = require("./basicCalc");
-const config = {
-  epsilon: 1e-12,
-  number: "number",
-  precision: 10,
-  predictable: false,
-};
-const math = create(all, config);
+const { rad_deg } = require("./trigonometry");
+
 const inputButtons = document.getElementsByClassName("inputBtns");
 const inputsDisplay = document.getElementById("inputs");
 const outputDisplay = document.getElementById("outputs");
 const operators = document.getElementsByClassName("operators");
 const functionsBtns = document.getElementsByClassName("functions");
 const ans = document.getElementById("ans");
+const radiansBtn = document.getElementById("radiansBtn");
+const degreesBtn = document.getElementById("degreesBtn");
 
 let displayString = ``;
 let memory = [];
@@ -54,11 +50,12 @@ document.getElementById("power").addEventListener("click", (e) => {
 });
 
 document.getElementById("fact").addEventListener("click", () => {
-  writeToScreen("x!(");
+  writeToScreen("!");
 });
 
 document.getElementById("equals").addEventListener("click", () => {
-  ans.value = outputDisplay.textContent = math.evaluate(replaceInvalid());
+  ans.value = outputDisplay.textContent = expressionCalc(replaceInvalid());
+  console.log(replaceInvalid());
   if (memory.length === 8) {
     memory = [];
     document.getElementsByClassName("history")[0].innerHTML = "";
@@ -95,6 +92,24 @@ document.getElementById("ans").addEventListener("click", () => {
   }
 });
 
+radiansBtn.addEventListener("click", () => {
+  if (!radiansBtn.classList.contains("active_angle")) {
+    radiansBtn.classList.toggle("active_angle");
+    degreesBtn.classList.remove("active_angle");
+    rad_deg.RADIAN = true;
+  }
+});
+
+degreesBtn.addEventListener("click", () => {
+  if (!degreesBtn.classList.contains("active_angle")) {
+    degreesBtn.classList.toggle("active_angle");
+    radiansBtn.classList.remove("active_angle");
+    rad_deg.RADIAN = false;
+  }
+});
+
+document.addEventListener("keydown", (e) => {});
+
 const replaceInvalid = () => {
   return displayString
     .replace(/×/g, "*")
@@ -105,7 +120,9 @@ const replaceInvalid = () => {
     .replace(/(sin-1)/g, "asin")
     .replace(/(tan-1)/g, "atan")
     .replace(/(x\!)/g, "factorial")
-    .replace(/π/g, "pi");
+    .replace(/π/g, "pi")
+    .replace(/(log)/g, "log10")
+    .replace(/(ln)/g, "log");
 };
 
 const animateAns = () => {
