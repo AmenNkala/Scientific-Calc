@@ -14,8 +14,7 @@ let displayString = ``;
 let memory = [];
 
 const writeToScreen = (value) => {
-  displayString += value;
-  inputsDisplay.textContent = displayString;
+  displayString = inputsDisplay.value;
   if (!validateExpression(displayString)) {
     inputsDisplay.classList.toggle("invalid");
   } else {
@@ -108,7 +107,12 @@ degreesBtn.addEventListener("click", () => {
   }
 });
 
-document.addEventListener("keydown", (e) => {});
+inputsDisplay.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    document.getElementById("equals").click();
+  }
+});
 
 const replaceInvalid = () => {
   return displayString
